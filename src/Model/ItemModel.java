@@ -8,17 +8,18 @@ public class ItemModel{
     private String nome;
     private String raridade;
     private int valorSorteado;
-    private long seed = scanner.nextLong();
-    private static GeradorLCG geradorLCG = new GeradorLCG();
+    private static GeradorLCG geradorLCG = new GeradorLCG(465842168522L);
+
+
 
     public ItemModel(){
-        this.valorSorteado =  geradorLCG.proximoInt(200, seed);
+        this.valorSorteado =  geradorLCG.proximoInt(200);
         this.raridade = AtribuirRaridade();
   
     }
     public ItemModel(String nome) {
         this.nome = nome;
-        this.valorSorteado =  geradorLCG.proximoInt(200,seed);
+        this.valorSorteado =  geradorLCG.proximoInt(200);
         this.raridade = AtribuirRaridade();
     }
 
@@ -36,11 +37,12 @@ public class ItemModel{
     }
 
     public int GerarRaridade() {
-        return geradorLCG.proximoInt(200,seed);
+        return geradorLCG.proximoInt(200);
     }
 
     public int getValorSorteado() { return valorSorteado; }
 
+    
     public String AtribuirRaridade(){
         int sorteio = valorSorteado;
 
@@ -48,7 +50,7 @@ public class ItemModel{
             return "COMUM";
         }else if(sorteio > 140 && sorteio < 184){
             return "RARA";
-        }else if(sorteio > 184 && sorteio <=198){
+        }else if(sorteio >= 184 && sorteio <=198){
             return "ÉPICA";
         }else{
             return "LENDARIA";

@@ -10,7 +10,7 @@ public class GeradorLCG {
         this.semente = sementeInicial;
     }
 
-    public int proximoInt(int limite, long semente) {
+    public int proximoInt(int limite) {
         semente = (A * semente + C) % M;
         
         return (int) ((semente >>> 0) % limite); 
