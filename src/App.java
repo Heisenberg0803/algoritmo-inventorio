@@ -2,9 +2,11 @@
 //import java.util.List;
 //import java.util.Scanner;
 //import Model.ItemModel;
-//
-//public class App {
-//    public static void main(String[] args) throws Exception {
+import Model.JogadorModel;
+import Model.TabelaHashJogadores2;
+
+public class App {
+  public static void main(String[] args) throws Exception {
 //      Scanner scanner = new Scanner(System.in);
 //      List<ItemModel> listaItens = new ArrayList<ItemModel>();
 //
@@ -23,13 +25,7 @@
 
 
 
-import Model.JogadorModel;
-import Model.TabelaHashJogadores2;
 
-
-
-public class App {
-  public static void main(String[] args) {
     // 1. Criamos a instância da sua Tabela Hash
     TabelaHashJogadores2 minhaTabela = new TabelaHashJogadores2();
 

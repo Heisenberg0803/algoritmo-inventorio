@@ -6,7 +6,7 @@ public class ItemModel{
     Scanner scanner = new Scanner(System.in);
 
     private String nome;
-    private String raridade;
+    private Raridade raridade;
     private int valorSorteado;
     private static GeradorLCG geradorLCG = new GeradorLCG(465842168522L);
 
@@ -29,10 +29,10 @@ public class ItemModel{
     public void setNome(String nome) {
         this.nome = nome;
     }
-    public String getRaridade() {
+    public Raridade getRaridade() {
         return raridade;
     }
-    public void setRaridade(String raridade) {
+    public void setRaridade(Raridade raridade) {
         this.raridade = raridade;
     }
 
@@ -43,17 +43,17 @@ public class ItemModel{
     public int getValorSorteado() { return valorSorteado; }
 
     
-    public String AtribuirRaridade(){
+    public Raridade AtribuirRaridade(){
         int sorteio = valorSorteado;
 
         if(sorteio <= 140){
-            return "COMUM";
+            return raridade.COMUM;
         }else if(sorteio > 140 && sorteio < 184){
-            return "RARA";
+            return raridade.RARA;
         }else if(sorteio >= 184 && sorteio <=198){
-            return "ÉPICA";
+            return raridade.EPICA;
         }else{
-            return "LENDARIA";
+            return raridade.LENDARIA;
         }
     
     }
