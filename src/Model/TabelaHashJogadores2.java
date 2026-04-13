@@ -45,7 +45,10 @@ public class TabelaHashJogadores2 {
         int soma = 0;
         do{
             int valorNumerico = Math.abs(chave.hashCode()); // Transforma texto em número
-            soma = (valorNumerico + indice) % tamanho;
+
+            System.out.println("DEBUG: Nome: " + chave + " | Hash Original: " + valorNumerico);
+
+            soma = Math.abs((valorNumerico + indice) % tamanho);
             indice++;
         }while(tabelaJogadores[soma]!=null);
         return soma;
@@ -57,7 +60,7 @@ public class TabelaHashJogadores2 {
         int soma = 0;
         do{
             int valorNumerico = Math.abs(chave.hashCode());
-            soma = ((valorNumerico % tamanho)+ (indice * indice)) % tamanho;
+            soma = Math.abs(((valorNumerico % tamanho)+ (indice * indice)) % tamanho);
             indice++;
         }while(tabelaJogadores[soma]!=null);
         return soma;
@@ -82,6 +85,46 @@ public class TabelaHashJogadores2 {
         System.out.println("Jogador " + chave + " inserido com sucesso no índice: " + indiceFinal);
     }
 
+    public void buscarJogador(String chaveBusca, String metodo) {
+        int tamanho = tabelaJogadores.length;
+        int valorNumerico = Math.abs(chaveBusca.hashCode());
+        int indice = 0;
+        int posicao = 0;
+
+        System.out.println("\n[BUSCA] Procurando por: " + chaveBusca);
+
+        do {
+            // REPETE A MESMA LÓGICA DE CÁLCULO DA INSERÇÃO
+            if (metodo.equalsIgnoreCase("quadratica")) {
+                posicao = Math.abs(((valorNumerico % tamanho) + (indice * indice)) % tamanho);
+            } else {
+                posicao = Math.abs((valorNumerico + indice) % tamanho);
+            }
+
+            JogadorModel encontrado = tabelaJogadores[posicao];
+
+            // Se encontrar um slot nulo, o jogador com certeza não está na tabela
+            if (encontrado == null) {
+                System.out.println("(!) Jogador " + chaveBusca + " não encontrado (Slot vazio).");
+                System.out.println("Posicao: " + tabelaJogadores[0]);
+                return;
+            }
+
+            // Verifica se o nome no objeto coincide com a busca
+            if (encontrado.getNome().equals(chaveBusca)) {
+                System.out.println("(V) Jogador encontrado no índice: " + posicao);
+                System.out.println("Posicao: " + tabelaJogadores[0]);
+                System.out.println("    Nome: " + encontrado.getNome());
+                return;
+            }
+
+            indice++;
+            // Segurança para não entrar em loop infinito se a tabela estiver cheia
+        } while (tabelaJogadores[posicao] != null);
+
+        System.out.println("(!) Jogador não encontrado após percorrer as opções.");
+        System.out.println("Posicao: " + tabelaJogadores[0].getNome());
+    }
     public void imprimirTabela() {
         System.out.println("\n========== TABELA HASH DE JOGADORES ==========");
         System.out.printf("%-10s | %-20s\n", "ÍNDICE", "JOGADOR");
@@ -100,6 +143,7 @@ public class TabelaHashJogadores2 {
     }
 
 
+    
 
 
 
