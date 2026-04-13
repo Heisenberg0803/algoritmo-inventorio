@@ -4,7 +4,7 @@ import java.util.Scanner;
 public class App {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        TabelaHashJogadores2 tabelaHash = new TabelaHashJogadores2();
+        TabelaHashJogadores tabelaHash = new TabelaHashJogadores();
         Runtime runtime = Runtime.getRuntime();
 
         // 1. GERAÇÃO AUTOMATIZADA DE JOGADORES (Para facilitar testes de escala)
@@ -18,10 +18,13 @@ public class App {
         tabelaHash.setNumJogadores(qtdJogadores);
         tabelaHash.definirTamanho();
 
+        System.out.println("Digite o método Hash que deseja usar (linear/quadratica): ");
+        String metodoEscolhido = scanner.nextLine();
+
         for (int i = 0; i < qtdJogadores; i++) {
             // Criando jogadores com nomes Jogador_0, Jogador_1...
             JogadorModel novo = new JogadorModel("Jogador_" + i);
-            tabelaHash.inserir(novo, "linear");
+            tabelaHash.inserir(novo, metodoEscolhido);
         }
 
         long t1 = System.nanoTime();
@@ -53,7 +56,7 @@ public class App {
                 case 1: // ALOCAÇÃO DE ITENS (Mede HEAP)
                     System.out.print("Digite o nome do jogador (ex: Jogador_0): ");
                     String nomeAlvo = scanner.nextLine();
-                    JogadorModel jDestino = buscarJogadorObjeto(tabelaHash, nomeAlvo);
+                    JogadorModel jDestino = tabelaHash.buscarJogador(nomeAlvo, metodoEscolhido);
 
                     if (jDestino != null) {
                         System.out.print("Quantos itens da pool deseja entregar? (Máx " + qtdItensGlobal + "): ");
@@ -85,8 +88,8 @@ public class App {
                     String nomeBusca = scanner.nextLine();
 
                     long tIniBusca = System.nanoTime();
-                    tabelaHash.buscarJogador(nomeBusca, "linear"); // Chama sua função original
-                    JogadorModel alvo = buscarJogadorObjeto(tabelaHash, nomeBusca);
+                    JogadorModel alvo = tabelaHash.buscarJogador(nomeBusca, metodoEscolhido); // Chama sua função original
+
                     long tFimBusca = System.nanoTime();
 
                     if (alvo != null) {
@@ -120,11 +123,5 @@ public class App {
         }
     }
 
-    // Função necessária para capturar a referência do objeto JogadorModel na Hash
-    public static JogadorModel buscarJogadorObjeto(TabelaHashJogadores2 tabela, String nome) {
-        for (JogadorModel j : tabela.getTabelaJogadores()) {
-            if (j != null && j.getNome().equalsIgnoreCase(nome)) return j;
-        }
-        return null;
-    }
+
 }

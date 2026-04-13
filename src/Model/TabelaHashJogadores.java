@@ -1,76 +1,165 @@
-//package Model;
-//
-//public class TabelaHashJogadores {
-//    private JogadorModel[] tabela;
-//    private int tamanho;
-//    private final double CONSTANTE_KNUTH = 0.6180339887; // Razão Áurea
-//
-//    public TabelaHashJogadores(int tamanho) {
-//        this.tamanho = tamanho;
-//        this.tabela = new JogadorModel[tamanho];
-//    }
-//
-//    // --- FUNÇÕES DE ESPALHAMENTO ---
-//
-//    // 1. Método da Divisão
-//    private int hashDivisao(String chave) {
-//        int valorNumerico = Math.abs(chave.hashCode()); // Transforma texto em número
-//        return valorNumerico % tamanho;
-//    }
-//
-//    // 2. Método da Multiplicação
-//    private int hashMultiplicacao(String chave) {
-//        int valorNumerico = Math.abs(chave.hashCode());
-//        double temp = valorNumerico * CONSTANTE_KNUTH;
-//        return (int) (tamanho * (temp - Math.floor(temp)));
-//    }
-//
-//    // --- FUNÇÕES DE COLISÃO ---
-//
-//    // 1. Sondagem Linear
-//
-//    private int sondagemLinear(int ind){
-//        while (tabela[ind] != null) {
-//            System.out.println("Colisão no índice " + ind + "! Tentando próximo...");
-//            ind = (ind + 1) % tamanho;
-//        }
-//    }
-//
-//
-//
-//    // --- OPERAÇÕES DA TABELA ---
-//
-//    public void inserir(JogadorModel j, String metodo) {
-//        int indice;
-//        if (metodo.equalsIgnoreCase("divisao")) {
-//            indice = hashDivisao(j.getNome());
-//        } else {
-//            indice = hashMultiplicacao(j.getNome());
-//        }
-//
-//        // Exemplo simples: Tratamento de colisão por "Linear Probing"
-//        // (se a vaga estiver ocupada, tenta a próxima)
-//        while (tabela[indice] != null) {
-//            System.out.println("Colisão no índice " + indice + "! Tentando próximo...");
-//            indice = (indice + 1) % tamanho;
-//        }
-//
-//        tabela[indice] = j;
-//        System.out.println("Jogador " + j.getNome() + " inserido no índice " + indice);
-//    }
-//
-//    public JogadorModel buscar(String nome, String metodo) {
-//        int indice = metodo.equalsIgnoreCase("divisao") ? hashDivisao(nome) : hashMultiplicacao(nome);
-//
-//        // Busca linear a partir do índice (caso tenha havido colisão na inserção)
-//        int inicio = indice;
-//        while (tabela[indice] != null) {
-//            if (tabela[indice].getNome().equals(nome)) {
-//                return tabela[indice];
-//            }
-//            indice = (indice + 1) % tamanho;
-//            if (indice == inicio) break; // Deu a volta na tabela e não achou
-//        }
-//        return null;
-//    }
-//}
+package Model;
+
+import java.math.BigInteger;
+
+public class TabelaHashJogadores {
+
+
+    private JogadorModel[] tabelaJogadores;
+
+    public JogadorModel[] getTabelaJogadores() {
+        return tabelaJogadores;
+    }
+
+    public void setTabelaJogadores(JogadorModel[] tabelaJogadores) {
+        this.tabelaJogadores = tabelaJogadores;
+    }
+
+
+
+    private int numJogadores;
+
+    public int getNumJogadores() {
+        return numJogadores;
+    }
+
+    public void setNumJogadores(int numJogadores) {
+        this.numJogadores = numJogadores;
+    }
+
+
+
+    public void definirTamanho(){
+        int conta = numJogadores * 2;
+        BigInteger num = BigInteger.valueOf(conta);
+        int tabela = num.nextProbablePrime().intValue();
+        this.tabelaJogadores = new JogadorModel[tabela];
+
+    }
+
+
+    private int SondagemLinear(String chave, int tamanho) {
+        int indice = 0;
+        int soma = 0;
+        int contadorColisao = 0;
+        int valorNumerico = Math.abs(chave.hashCode()); // Transforma texto em número
+
+        do{
+            soma = Math.abs((valorNumerico + indice) % tamanho);
+            indice++;
+            contadorColisao++;
+        }while(tabelaJogadores[soma]!=null);
+
+        System.out.println("------------------------------------------------------------------------------\n");
+        System.out.println("Nome: " + chave + " | Hash Original: " + valorNumerico + "\n");
+        System.out.println("Número de colisões:" + contadorColisao + "\n");
+
+        return soma;
+
+    }
+
+    private int quadraticProbing(String chave, int tamanho) {
+        int indice = 0;
+        int soma = 0;
+        int contadorColisao = 0;
+        int valorNumerico = Math.abs(chave.hashCode());
+        do{
+
+            soma = Math.abs(((valorNumerico % tamanho)+ (indice * indice)) % tamanho);
+            indice++;
+            contadorColisao++;
+        }while(tabelaJogadores[soma]!=null);
+
+        System.out.println("------------------------------------------------------------------------------\n");
+        System.out.println("Nome: " + chave + " | Hash Original: " + valorNumerico + "\n");
+        System.out.println("Número de colisões:" + contadorColisao + "\n");
+
+        return soma;
+    }
+
+    public void inserir(JogadorModel jogador, String metodo) {
+        String chave = jogador.getNome();
+        int tamanho = tabelaJogadores.length; //para não ficar preso no paradoxo da função definirTamanho usar o .length é pq o numJogadores será passado na main quando for puxado
+        int indiceFinal;
+
+        if (metodo.equalsIgnoreCase("linear")) {
+            indiceFinal = SondagemLinear(chave, tamanho);
+        } else if (metodo.equalsIgnoreCase("quadratica")) {
+            indiceFinal = quadraticProbing(chave, tamanho);
+        } else {
+            indiceFinal = SondagemLinear(chave, tamanho);
+        }
+
+
+        tabelaJogadores[indiceFinal] = jogador;
+
+        System.out.println("Jogador " + chave + " inserido com sucesso no índice: " + indiceFinal  + "\n");
+    }
+
+    public JogadorModel buscarJogador(String chaveBusca, String metodo) {
+        int tamanho = tabelaJogadores.length;
+        int valorNumerico = Math.abs(chaveBusca.hashCode());
+        int indice = 0;
+        int posicao = 0;
+
+        System.out.println("\n[BUSCA] Procurando por: " + chaveBusca);
+
+        do {
+            // REPETE A MESMA LÓGICA DE CÁLCULO DA INSERÇÃO
+            if (metodo.equalsIgnoreCase("quadratica")) {
+                posicao = Math.abs(((valorNumerico % tamanho) + (indice * indice)) % tamanho);
+            } else {
+                posicao = Math.abs((valorNumerico + indice) % tamanho);
+            }
+
+            JogadorModel encontrado = tabelaJogadores[posicao];
+
+            // Se encontrar um slot nulo, o jogador com certeza não está na tabela
+            if (encontrado == null) {
+                System.out.println("(!) Jogador " + chaveBusca + " não encontrado (Slot vazio).");
+                System.out.println("Posicao: " + tabelaJogadores[posicao]);
+                return null;
+            }
+
+            // Verifica se o nome no objeto coincide com a busca
+            if (encontrado.getNome().equals(chaveBusca)) {
+                System.out.println("(V) Jogador encontrado no índice: " + posicao);
+                System.out.println("Posicao: " + tabelaJogadores[posicao]);
+                System.out.println("    Nome: " + encontrado.getNome());
+                return encontrado;
+            }
+
+            indice++;
+            // Segurança para não entrar em loop infinito se a tabela estiver cheia
+        } while (tabelaJogadores[posicao] != null);
+
+        System.out.println("(!) Jogador não encontrado após percorrer as opções.");
+        System.out.println("Posicao: " + tabelaJogadores[posicao].getNome());
+
+        return null;
+    }
+
+    public void imprimirTabela() {
+        System.out.println("\n========== TABELA HASH DE JOGADORES ==========");
+        System.out.printf("%-10s | %-20s\n", "ÍNDICE", "JOGADOR");
+        System.out.println("----------------------------------------------");
+
+        for (int i = 0; i < tabelaJogadores.length; i++) {
+            if (tabelaJogadores[i] != null) {
+                // Imprime o índice e o nome do jogador
+                System.out.printf("[%02d]  | %-20s\n", i, tabelaJogadores[i].getNome());
+            } else {
+                // Imprime que o slot está vazio para facilitar a visualização
+                System.out.printf("[%02d]  | %-20s\n", i, "[ VAZIO ]");
+            }
+        }
+        System.out.println("==============================================\n");
+    }
+
+
+    
+
+
+
+
+}
