@@ -1,20 +1,40 @@
-## Getting Started
+# Sistema de Inventário de Jogadores - Estrutura de Dados II
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+**Integrantes:**
+* Gustavo Kêm Fukuda
+* Rafael Nogueira
 
-## Folder Structure
+## 1. Descrição do Projeto
+Este projeto implementa um sistema de gerenciamento de inventário de jogadores utilizando estruturas de dados clássicas implementadas manualmente, sem o uso de bibliotecas prontas do Java (como `HashMap` ou `PriorityQueue`), conforme os requisitos da disciplina. 
 
-The workspace contains two folders by default, where:
+O sistema integra:
+* **Tabela Hash:** Para armazenamento e busca rápida de jogadores pelo Nick.
+* **Heap (Max-Heap):** Para organizar o inventário de cada jogador por raridade de itens.
+* **Geradores de Números Aleatórios:** Implementações manuais (LCG e XorShift) para criação de drops de itens e testes de estresse.
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+## 2. Estrutura de Arquivos
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+### Pacote `Model`
+* **`JogadorModel.java`**: Representa o jogador e contém seu inventário próprio.
+* **`ItemModel.java`**: Define o item, sua raridade e o valor sorteado pelo gerador.
+* **`InventarioModel.java`**: Implementação manual de um **Max-Heap** para organizar itens por peso de raridade.
+* **`TabelaHashJogadores.java`**: Implementação da Tabela Hash com suporte a **Sondagem Linear** e **Sondagem Quadrática**.
+* **`GeradorLCG.java`**: Gerador Congruencial Linear para números aleatórios.
+* **`GeradorXorShift.java`**: Segundo método de geração aleatória (XorShift).
+* **`Raridade.java`**: Enum que define os pesos das raridades (Comum, Rara, Épica, Lendária).
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
+### Pacote `Main` / Raiz
+* **`App.java`**: Ponto de entrada do programa que permite configurar a `seed`, o tamanho da entrada e o método de colisão.
+* **`GeradorGraficos.java`** (opcional): Script ou classe utilizada para exportar as métricas de tempo e colisões.
 
-## Dependency Management
+## 3. Como Executar
 
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+### Pré-requisitos
+* Java JDK 17 ou superior.
+* Terminal ou IDE (VS Code, IntelliJ, Eclipse).
 
-oi
+### Passo a Passo
+1. No terminal, navegue até a pasta raiz do projeto.
+2. Compile os arquivos:
+   ```bash
+   javac Model/*.java App.java
