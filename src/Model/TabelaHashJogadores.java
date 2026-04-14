@@ -7,6 +7,18 @@ public class TabelaHashJogadores {
 
     private JogadorModel[] tabelaJogadores;
 
+    private int contadorTotal = 0;
+
+    public int getContadorTotal() {
+        return contadorTotal;
+    }
+
+    public void resetarContador(){
+        this.contadorTotal = 0;
+    };
+
+
+
     public JogadorModel[] getTabelaJogadores() {
         return tabelaJogadores;
     }
@@ -30,7 +42,7 @@ public class TabelaHashJogadores {
 
 
     public void definirTamanho(){
-        int conta = numJogadores * 2;
+        int conta = numJogadores;
         BigInteger num = BigInteger.valueOf(conta);
         int tabela = num.nextProbablePrime().intValue();
         this.tabelaJogadores = new JogadorModel[tabela];
@@ -41,18 +53,18 @@ public class TabelaHashJogadores {
     private int SondagemLinear(String chave, int tamanho) {
         int indice = 0;
         int soma = 0;
-        int contadorColisao = 0;
         int valorNumerico = Math.abs(chave.hashCode()); // Transforma texto em número
 
         do{
             soma = Math.abs((valorNumerico + indice) % tamanho);
             indice++;
-            contadorColisao++;
+            contadorTotal++;
         }while(tabelaJogadores[soma]!=null);
 
         System.out.println("------------------------------------------------------------------------------\n");
         System.out.println("Nome: " + chave + " | Hash Original: " + valorNumerico + "\n");
-        System.out.println("Número de colisões:" + contadorColisao + "\n");
+        System.out.println("Número de colisões:" + indice + "\n");
+        System.out.println("Número de colisões Totais:" + contadorTotal + "\n");
 
         return soma;
 
@@ -61,18 +73,18 @@ public class TabelaHashJogadores {
     private int quadraticProbing(String chave, int tamanho) {
         int indice = 0;
         int soma = 0;
-        int contadorColisao = 0;
         int valorNumerico = Math.abs(chave.hashCode());
         do{
 
             soma = Math.abs(((valorNumerico % tamanho)+ (indice * indice)) % tamanho);
             indice++;
-            contadorColisao++;
+            contadorTotal++;
         }while(tabelaJogadores[soma]!=null);
 
         System.out.println("------------------------------------------------------------------------------\n");
         System.out.println("Nome: " + chave + " | Hash Original: " + valorNumerico + "\n");
-        System.out.println("Número de colisões:" + contadorColisao + "\n");
+        System.out.println("Número de colisões:" + indice + "\n");
+        System.out.println("Número de colisões Totais:" + contadorTotal + "\n");
 
         return soma;
     }

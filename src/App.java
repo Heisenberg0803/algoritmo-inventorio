@@ -18,6 +18,7 @@ public class App {
         tabelaHash.setNumJogadores(qtdJogadores);
         tabelaHash.definirTamanho();
 
+
         System.out.println("Digite o método Hash que deseja usar (linear/quadratica): ");
         String metodoEscolhido = scanner.nextLine();
 
@@ -33,12 +34,26 @@ public class App {
         System.out.println("Tempo: " + (t1 - t0) + " ns | Memória: " + (m1 - m0) / 1024 + " KB");
 
         // 2. GERAÇÃO DA POOL DE ITENS
-        System.out.print("\nQuantidade de itens totais no mundo: ");
+       System.out.print("\nQuantidade de itens totais no mundo: ");
         int qtdItensGlobal = scanner.nextInt();
+
+        // 1. Captura o estado inicial (Tempo e Memória)
+        long t3 = System.nanoTime();
+        long m3 = runtime.totalMemory() - runtime.freeMemory();
+
+        // 2. Executa a lógica de criação
         ItemModel[] poolGlobal = new ItemModel[qtdItensGlobal];
         for (int i = 0; i < qtdItensGlobal; i++) {
             poolGlobal[i] = new ItemModel("Item_" + i);
         }
+
+        // 3. Captura o estado final
+        long t4 = System.nanoTime();
+        long m4 = runtime.totalMemory() - runtime.freeMemory();
+
+        // 4. Exibe os resultados
+        System.out.println("\n[MÉTRICA POOL] Criação de " + qtdItensGlobal + " itens:");
+        System.out.println("Tempo: " + (t4 - t3) + " ns | Memória: " + (m4 - m3) / 1024 + " KB");
 
         // 3. MENU INTERATIVO (Permite múltiplas ações)
         boolean rodando = true;

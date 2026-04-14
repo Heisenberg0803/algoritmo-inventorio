@@ -9,17 +9,18 @@ public class ItemModel{
     private Raridade raridade;
     private int valorSorteado;
     private static GeradorLCG geradorLCG = new GeradorLCG(465842168522L);
+    private static GeradorXorshift geradorXorshift = new GeradorXorshift(465842168522L);
 
 
 
     public ItemModel(){
-        this.valorSorteado =  geradorLCG.proximoInt(200);
+        this.valorSorteado =  geradorXorshift.proximoInt(200);
         this.raridade = AtribuirRaridade();
   
     }
     public ItemModel(String nome) {
         this.nome = nome;
-        this.valorSorteado =  geradorLCG.proximoInt(200);
+        this.valorSorteado =  geradorXorshift.proximoInt(200);
         this.raridade = AtribuirRaridade();
     }
 
